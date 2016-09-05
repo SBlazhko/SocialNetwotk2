@@ -1,4 +1,4 @@
-	class Api::V1::TokensController < ApplicationController
+	class Api::V1::TokensController < ApplicationApiController
 
 	skip_before_action :authenticate!
 

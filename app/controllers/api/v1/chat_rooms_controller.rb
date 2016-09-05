@@ -1,4 +1,4 @@
-class Api::V1::ChatRoomsController < ApplicationController
+class Api::V1::ChatRoomsController < ApplicationApiController
 
 	before_action :find_chat_room, only: [:show_all_messages, :show, :destroy, :add_profile_to_chat]
 
@@ -30,15 +30,15 @@ class Api::V1::ChatRoomsController < ApplicationController
 		render json: ChatRoom.all, status: 200
 	end
 
-	api :GET, 'chat_room_all_messages', 'Show ChatRoom with messages'
+	api :GET, 'show_all_messages', 'Show ChatRoom with messages'
 	param :chat_room_id, :number, 'ChatRoom id (query param)'
 	param :page, :number, 'Page number (query param)'
 	example ChatRoomHelper.show_all_messages
 
 	def show_all_messages
-		messages = chat_room.messages.page(params[:page]).per(10)
-		if chat_room.users.include?(current_user.id)
-			render json: {chat_room: chat_room, pages: {total: messages.total_pages, current: messages.current_page, 
+		messages = @chat_room.messages.page(params[:page]).per(10)
+		if @chat_room.users.include?(current_user.id)
+			render json: {chat_room: @chat_room, pages: {total: messages.total_pages, current: messages.current_page, 
 				message_count: messages.count}, messages: messages}, status: 200
 		else
 			render json: {errors: {access: "failed"}}
@@ -50,8 +50,8 @@ class Api::V1::ChatRoomsController < ApplicationController
 	example ChatRoomHelper.show
 
 	def show
-		if chat_room.users.include?(current_user.id)
-			render json: {chat_room: chat_room, last_message: chat_room.messages.last}, status: 200
+		if @chat_room.users.include?(current_user.id)
+			render json: {chat_room: @chat_room, last_message: @chat_room.messages.last}, status: 200
 		else
 			render json: {errors: {access: "failed"}}
 		end
@@ -61,8 +61,8 @@ class Api::V1::ChatRoomsController < ApplicationController
 	param :chat_room_id, :number, 'ChatRoom id (query param)'
 
 	def destroy
-		if chat_room.profile_id == current_user.id
-			chat_room.destroy
+		if @chat_room.profile_id == current_user.id
+			@chat_room.destroy
 		else 
 			render json: {errors: {user: "not owner"}}
 		end
@@ -74,10 +74,10 @@ class Api::V1::ChatRoomsController < ApplicationController
 
 	def add_profile_to_chat
 		id = Profile.find_by(id: params[:profile_id]).id 
-		if chat_room.profile_id == current_user.id && !chat_room.users.include?(id)
-			chat_room.users << id 
-			chat_room.save 
-			render json: {success: "user add to chat_room #{chat_room.id}"}
+		if @chat_room.profile_id == current_user.id && !@chat_room.users.include?(id)
+			@chat_room.users << id 
+			@chat_room.save 
+			render json: {success: "user add to chat_room #{@chat_room.id}"}
 		else
 			render json: {errors: {user: "not owner or user already exist"}}
 		end
@@ -97,6 +97,6 @@ class Api::V1::ChatRoomsController < ApplicationController
 	end
 
 	def find_chat_room
-		chat_room = ChatRoom.find_by(id: params[:chat_room_id])
+		@chat_room = ChatRoom.find_by(id: params[:chat_room_id])
 	end
 end

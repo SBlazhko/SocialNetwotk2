@@ -1,5 +1,5 @@
 # User Info
-class Api::V1::UserInfosController < ApplicationController
+class Api::V1::UserInfosController < ApplicationApiController
 
   api :GET, 'profile/info/', "Show user infos"
   formats ['json']

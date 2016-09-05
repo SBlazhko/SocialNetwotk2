@@ -1,4 +1,4 @@
-class  Api::V1::ProfilesController < ApplicationController
+class  Api::V1::ProfilesController < ApplicationApiController
 
 	skip_before_action :authenticate!, only: [:create]
 

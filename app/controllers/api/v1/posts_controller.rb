@@ -1,4 +1,4 @@
-class  Api::V1::PostsController < ApplicationController
+class  Api::V1::PostsController < ApplicationApiController
 
 	api :GET, 'profile/posts', "Show all posts current_profile"
 	param :page, :number, "Page number (query param)"

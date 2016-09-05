@@ -1,4 +1,4 @@
-class Api::V1::AttachmentFileController < ApplicationController
+class Api::V1::AttachmentFileController < ApplicationApiController
   require 'mime/types'
 
   api :POST, 'upload_file', 'Upload single file'
