@@ -7,7 +7,7 @@ set :branch, 'master'
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, '/var/www/social_network_api'
+set :deploy_to, '/var/www/social_network'
 set :rbenv_ruby, '2.2.3'
 set :stage, :production
 # set :whenever_identifier, ->{ "#{fetch(:application)}_#{fetch(:stage)}" }
