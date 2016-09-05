@@ -2,7 +2,7 @@
 
 	skip_before_action :authenticate!
 
-	api :POST, 'login', "Generate new user token"
+	api :POST, 'login', "Generate new user token :)"
 	param :login, String, "Profile login"
 	param :password, String, "Profile password"
 	error code: 401, desc: "Invalid email or password"
