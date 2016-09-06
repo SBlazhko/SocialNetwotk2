@@ -1,5 +1,6 @@
 # User Info
-class Api::V1::UserInfosController < ApplicationApiController
+class Api::V1::UserInfosController < ApplicationController
+  before_action :push_infos, only: [:create]
 
   api :GET, 'profile/info/', "Show user infos"
   formats ['json']
@@ -35,11 +36,17 @@ class Api::V1::UserInfosController < ApplicationApiController
     result = []
     params[:user_infos].each do |info|
       infos = UserInfo.new(profile_id: current_user.id,
-      key: info[:key],
-      value: info[:value],
-      access_level: info[:access_level])
+                           key: info[:key],
+                           value: info[:value],
+                           access_level: info[:access_level])
       if infos.save
         result << infos
+        registration_ids = ["fl1n1H_82Ck:APA91bFjzSel7CFH61eetWR9YfEVVe6oQgsNK1bWNdp6lKG2y5D3DL5gta79NmqnMgN5kYvh9Mx3Si5yU54w9irTvTC4zbizOhvgcPTC-VHuLAlft72U2y_Co0UbITaVU5nmdIq1ZM3t"]
+        options = {"notification": {
+            "title": "Portugal vs. Denmark",
+            "text": "5 to 1"
+        }}
+        response = @fcm.send(registration_ids, options)
       else
         render json: info.errors, status:  :unprocessable_entity
       end
@@ -54,7 +61,7 @@ class Api::V1::UserInfosController < ApplicationApiController
   param :access_level, ["level_one", "level_two", "level_three"], "Access level of the info"
   param :id, :number, "Info id"
   param :key, String
-  param :value, String  
+  param :value, String
   example UserInfosHelper.update
 
   def update
@@ -62,11 +69,11 @@ class Api::V1::UserInfosController < ApplicationApiController
     params[:user_infos].each do |info|
       info  = UserInfo.find(info[:id])
       if info.update(access_level: info[:access_level],
-                      key:  info[:key],
-                      value: info[:value])
+                     key:  info[:key],
+                     value: info[:value])
         result << info
       else
-        render json: { errors: @info.errors }, status: :unprocessable_entity
+        render json: { errors:  info.errors }, status: :unprocessable_entity
       end
     end
     render json: { user_infos: result }, status: :ok
@@ -76,13 +83,19 @@ class Api::V1::UserInfosController < ApplicationApiController
   formats ['json']
   error 422, "Unprocessable Entity"
   param :id, :number, required: true
-  
+
   def destroy
     info = UserInfo.find(params[:id])
     if info.destroy
       head :no_content
     else
-      render json: { errors: @info.errors }, status: :unprocessable_entity
+      render json: { errors: info.errors }, status: :unprocessable_entity
     end
   end
+
+  private
+  def push_infos
+    @fcm = FCM.new(Rails.application.secrets.push_server_key)
+  end
+
 end

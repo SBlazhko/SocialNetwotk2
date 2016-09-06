@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+# Push notification
+gem 'fcm'
 # gem 'pg'
 # API Documentation Tool
 gem 'apipie-rails'
