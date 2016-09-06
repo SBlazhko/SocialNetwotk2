@@ -22,7 +22,7 @@ test:
   pool: 5
   # these are our new parameters
   encoding: unicode
-  database: social_t2
+  database: social_t
   host: localhost
   username: sblazhko
   password: 2525
