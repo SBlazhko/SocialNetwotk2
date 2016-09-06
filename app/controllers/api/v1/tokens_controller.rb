@@ -47,7 +47,7 @@ class Api::V1::TokensController < ApplicationApiController
 	private
 
 	def device_push_token_create
-		dev = Device.where(token: params[:push_token])
+		dev = Device.where(push_token: params[:push_token])
 		dev.delete_all unless dev.empty?
 		device = Device.new(profile_id: @profile.id, push_token: params[:push_token], platform: params[:platform], device_id: params[:device_id])
 		return true if device.save
