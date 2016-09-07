@@ -67,13 +67,7 @@ class Api::V1::MessagesController < ApplicationApiController
   end
 
   def get_options
-    if @chat_room.users.count == 2
       @options = {notification: { title: @current_user.login,
                                   text: params[:message][:text].slice(0,50) }}
-    else
-      @options = {notification: { title: @chat_room.title,
-                                  text: params[:message][:text].slice(0,50) }}
-    end
-    @options
   end
 end
