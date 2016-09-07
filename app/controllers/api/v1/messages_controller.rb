@@ -48,9 +48,8 @@ class Api::V1::MessagesController < ApplicationApiController
 
   def get_users_token
     @arr_profile_token = []
-    chat_room = @chat_room
-    chat_room.users.each do |id|
-      device = Device.find_by(profile_id: id)
+    @chat_room.users.each do |id|
+      device = Device.where(profile_id: id, enabled: true)
       unless device.nil?
         @arr_profile_token << device.push_token if  device.profile_id != @current_user.id
       end
