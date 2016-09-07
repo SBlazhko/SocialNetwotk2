@@ -52,7 +52,7 @@ class Api::V1::MessagesController < ApplicationApiController
     chat_room.users.each do |id|
       device = Device.find_by(profile_id: id)
       unless device.nil?
-        @arr_profile_token << device.token if  device.profile_id != @current_user.id
+        @arr_profile_token << device.push_token if  device.profile_id != @current_user.id
       end
     end
     @arr_profile_token
@@ -68,11 +68,12 @@ class Api::V1::MessagesController < ApplicationApiController
 
   def get_options
     if @chat_room.users.count == 2
+      title = params[:message][:text].slice(0,50)
       @options = {notification: { title: @current_user.login,
-                                  text: params[:text][0, 50] }}
+                                  text: title }}
     else
       @options = {notification: { title: @chat_room.title,
-                                  text: params[:text][0, 50] }}
+                                  text: title }}
     end
     @options
   end
